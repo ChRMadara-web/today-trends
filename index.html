@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>🔥 Today Trends</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+      background: radial-gradient(circle at top, #0b1220, #020409);
+      color: #eaeaea;
+    }
+
+    header {
+      text-align: center;
+      padding: 40px 20px 20px;
+    }
+
+    h1 {
+      margin: 0 0 20px;
+      font-size: 34px;
+    }
+
+    .tabs {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+    }
+
+    .tab {
+      padding: 10px 18px;
+      border-radius: 12px;
+      border: 1px solid #1f2a44;
+      background: #0b1220;
+      color: #ccc;
+      cursor: pointer;
+    }
+
+    .tab.active {
+      background: #0d6efd;
+      color: white;
+      border-color: #0d6efd;
+    }
+
+    main {
+      max-width: 900px;
+      margin: 30px auto;
+      padding: 0 20px;
+    }
+
+    .card {
+      background: linear-gradient(145deg, #101a30, #0a1222);
+      border-radius: 16px;
+      padding: 20px;
+      margin-bottom: 16px;
+      cursor: pointer;
+      transition: transform .15s ease, box-shadow .15s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 30px rgba(0,0,0,.4);
+    }
+
+    .card h3 {
+      margin: 0 0 8px;
+    }
+
+    .read {
+      color: #0d6efd;
+      font-size: 14px;
+      margin-top: 8px;
+      display: inline-block;
+    }
+
+    .article {
+      background: linear-gradient(145deg, #101a30, #0a1222);
+      border-radius: 16px;
+      padding: 30px;
+    }
+
+    button {
+      margin-top: 20px;
+      padding: 10px 16px;
+      border-radius: 10px;
+      border: none;
+      background: #0d6efd;
+      color: white;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>🔥 Today Trends</h1>
+  <div class="tabs">
+    <div class="tab active" onclick="switchTab('home')">Главная</div>
+    <div class="tab" onclick="switchTab('today')">Сегодня</div>
+    <div class="tab" onclick="switchTab('crypto')">Крипто</div>
+  </div>
+</header>
+
+<main id="content"></main>
+
+<script>
+let currentTab = 'home';
+
+const data = {
+  home: [
+    {
+      title: "🔥 Горячие новости дня",
+      text: "Самые обсуждаемые события прямо сейчас.",
+      content: "Это главные новости дня. Здесь будет подборка самых кликабельных и популярных тем."
+    },
+    {
+      title: "🚀 Технологии и рынки",
+      text: "AI, стартапы, бизнес.",
+      content: "Развитие искусственного интеллекта и глобальные рыночные тренды."
+    }
+  ],
+
+  today: [
+    {
+      title: "🌍 Сегодня в мире",
+      text: "Ключевые события последних часов.",
+      content: "В мире произошло несколько важных событий, которые активно обсуждаются в СМИ."
+    },
+    {
+      title: "🗞 Общество",
+      text: "Социальные и политические темы.",
+      content: "Общественные процессы и реакции людей на происходящее."
+    }
+  ],
+
+  crypto: [
+    {
+      title: "₿ Bitcoin",
+      text: "Цена и настроение рынка.",
+      content: "Биткоин показывает волатильность на фоне новостей и решений регуляторов."
+    },
+    {
+      title: "Ξ Ethereum",
+      text: "Обновления сети.",
+      content: "Ethereum продолжает развитие и внедрение новых технологий."
+    }
+  ]
+};
+
+function renderTab(tab) {
+  currentTab = tab;
+  const container = document.getElementById("content");
+  container.innerHTML = "";
+
+  data[tab].forEach(item => {
+    const card = document.createElement("div");
+    card.className = "card";
+    card.innerHTML = `
+      <h3>${item.title}</h3>
+      <p>${item.text}</p>
+      <span class="read">Читать →</span>
+    `;
+    card.onclick = () => openArticle(item);
+    container.appendChild(card);
+  });
+}
+
+function openArticle(item) {
+  document.getElementById("content").innerHTML = `
+    <div class="article">
+      <h2>${item.title}</h2>
+      <p>${item.content}</p>
+      <button onclick="renderTab(currentTab)">← Назад</button>
+    </div>
+  `;
+}
+
+function switchTab(tab) {
+  document.querySelectorAll(".tab").forEach(t => t.classList.remove("active"));
+  event.target.classList.add("active");
+  renderTab(tab);
+}
+
+renderTab('home');
+</script>
+
+</body>
+</html>
+
