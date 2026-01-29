@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>Today Trends — Новости и тренды дня</title>
+
+  <!-- SEO -->
+  <meta name="description" content="Свежие мировые новости, тренды дня и криптовалюта. Быстро и без лагов.">
+  <meta name="keywords" content="новости, тренды, сегодня, crypto, bitcoin">
+  <meta name="robots" content="index, follow">
+
+  <style>
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+      background: radial-gradient(circle at top, #0f172a, #020617);
+      color: #e5e7eb;
+    }
+
+    header {
+      text-align: center;
+      padding: 30px 20px;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: 32px;
+    }
+
+    .tabs {
+      margin-top: 20px;
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+    }
+
+    .tab {
+      padding: 8px 16px;
+      border-radius: 20px;
+      border: none;
+      cursor: pointer;
+      background: #1f2933;
+      color: #e5e7eb;
+    }
+
+    .tab.active {
+      background: #2563eb;
+    }
+
+    main {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    .news {
+      display: grid;
+      gap: 14px;
+    }
+
+    .card {
+      background: #020617;
+      border: 1px solid #1f2937;
+      border-radius: 14px;
+      padding: 16px;
+      transition: transform 0.15s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-2px);
+    }
+
+    .card a {
+      color: #60a5fa;
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    .meta {
+      font-size: 13px;
+      color: #9ca3af;
+      margin-top: 6px;
+    }
+
+    .status {
+      text-align: center;
+      color: #9ca3af;
+      margin-top: 40px;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>🔥 Today Trends</h1>
+
+  <div class="tabs">
+    <button class="tab active" id="btn-today">Today</button>
+    <button class="tab" id="btn-crypto">Crypto</button>
+  </div>
+</header>
+
+<main>
+  <div id="status" class="status">Загрузка новостей…</div>
+  <div id="news" class="news"></div>
+</main>
+
+<script>
+  const newsBox = document.getElementById("news");
+  const statusText = document.getElementById("status");
+
+  const btnToday = document.getElementById("btn-today");
+  const btnCrypto = document.getElementById("btn-crypto");
+
+  const SOURCES = {
+    today: "https://api.rss2json.com/v1/api.json?rss_url=https://news.google.com/rss?hl=ru&gl=RU&ceid=RU:ru",
+    crypto: "https://api.rss2json.com/v1/api.json?rss_url=https://news.google.com/rss/search?q=cryptocurrency&hl=ru&gl=RU&ceid=RU:ru"
+  };
+
+  async function loadNews(type) {
+    newsBox.innerHTML = "";
+    statusText.textContent = "Загрузка новостей…";
+
+    try {
+      const res = await fetch(SOURCES[type]);
+      const data = await res.json();
+
+      if (!data.items || data.items.length === 0) {
+        statusText.textContent = "Новостей нет";
+        return;
+      }
+
+      statusText.textContent = "";
+      data.items.slice(0, 10).forEach(item => {
+        const card = document.createElement("div");
+        card.className = "card";
+        card.innerHTML = `
+          <a href="${item.link}" target="_blank">${item.title}</a>
+          <div class="meta">${item.pubDate}</div>
+        `;
+        newsBox.appendChild(card);
+      });
+
+    } catch (e) {
+      statusText.textContent = "Ошибка загрузки новостей";
+    }
+  }
+
+  btnToday.onclick = () => {
+    btnToday.classList.add("active");
+    btnCrypto.classList.remove("active");
+    loadNews("today");
+  };
+
+  btnCrypto.onclick = () => {
+    btnCrypto.classList.add("active");
+    btnToday.classList.remove("active");
+    loadNews("crypto");
+  };
+
+  loadNews("today");
+</script>
+
+</body>
+</html>
+
